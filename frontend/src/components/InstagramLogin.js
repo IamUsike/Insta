@@ -1,44 +1,61 @@
 import React, { useState } from "react";
+import { Eye, EyeOff } from "lucide-react";
 
 function InstagramLogin() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setIsLoading(true);
-    setError("");
+const handleSubmit = async (e) => {
+  e.preventDefault();
+  setIsLoading(true);
+  setError("");
 
-    const loginData = {
-      username,
-      password,
-    };
+  const loginData = {
+    username,
+    password,
+  };
 
-    try {
-      const response = await fetch("http://localhost:8000/accounts/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(loginData),
-      });
+  try {
+    const response = await fetch("http://localhost:8000/accounts/login", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(loginData),
+      redirect: "manual", // Handle redirects manually
+    });
 
-      const data = await response.json();
-
-      if (response.ok) {
-        console.log("Login successful");
-        window.location.href = "/dashboard"; // Redirect after login
+    if (response.ok) {
+      // Handle redirect if the backend sends a redirect
+      const redirectUrl = response.headers.get("Location");
+      if (redirectUrl) {
+        window.location.href = redirectUrl;
       } else {
-        setError(data.message || "An error occurred during login.");
+        console.log("Login successful");
       }
-    } catch (error) {
-      console.error("Login failed:", error);
-      setError("An unexpected error occurred. Please try again.");
-    } finally {
-      setIsLoading(false);
+    } else {
+      // Check if the response has a JSON body
+      const contentType = response.headers.get("Content-Type");
+      if (contentType && contentType.includes("application/json")) {
+        const errorData = await response.json();
+        setError(errorData.message || "An error occurred during login.");
+      } else {
+        setError("An error occurred, but no additional details are available.");
+      }
     }
+  } catch (error) {
+    console.error("Login failed:", error);
+    setError("An unexpected error occurred. Please try again.");
+  } finally {
+    setIsLoading(false);
+  }
+};
+
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
   };
 
   return (
@@ -61,14 +78,27 @@ function InstagramLogin() {
               className="w-full p-2 border rounded focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
               required
             />
-            <input
-              type="password"
-              placeholder="Password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="w-full p-2 border rounded focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
-              required
-            />
+            <div className="relative">
+              <input
+                type={showPassword ? "text" : "password"}
+                placeholder="Password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="w-full p-2 border rounded focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
+                required
+              />
+              <button
+                type="button"
+                onClick={togglePasswordVisibility}
+                className="absolute inset-y-0 right-0 pr-3 flex items-center text-sm leading-5"
+              >
+                {showPassword ? (
+                  <EyeOff className="h-5 w-5 text-gray-500" />
+                ) : (
+                  <Eye className="h-5 w-5 text-gray-500" />
+                )}
+              </button>
+            </div>
             {error && <p className="text-red-500 text-sm">{error}</p>}
             <button
               type="submit"
