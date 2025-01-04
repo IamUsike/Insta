@@ -1,6 +1,5 @@
 import puppeteer from "puppeteer";
 import { asyncHandler } from "../utils/asyncHandler.js";
-import { ApiError } from "../utils/apiError.js";
 import { User } from "../models/user.model.js"; // Interaction with MongoDB
 import { ApiResponse } from "../utils/apiResponse.js";
 

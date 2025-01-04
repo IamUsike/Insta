@@ -8,51 +8,56 @@ function InstagramLogin() {
   const [error, setError] = useState("");
   const [showPassword, setShowPassword] = useState(false);
 
-const handleSubmit = async (e) => {
-  e.preventDefault();
-  setIsLoading(true);
-  setError("");
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setIsLoading(true);
+    setError("");
 
-  const loginData = {
-    username,
-    password,
-  };
+    const loginData = {
+      username,
+      password,
+    };
 
-  try {
-    const response = await fetch("http://localhost:8000/accounts/login", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(loginData),
-      redirect: "manual", // Handle redirects manually
-    });
+    try {
+      const response = await fetch(
+        `${process.env.REACT_APP_API_URL}/accounts/login`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(loginData),
+          redirect: "manual", // Handle redirects manually
+        }
+      );
 
-    if (response.ok) {
-      // Handle redirect if the backend sends a redirect
-      const redirectUrl = response.headers.get("Location");
-      if (redirectUrl) {
-        window.location.href = redirectUrl;
+      if (response.ok) {
+        // Handle redirect if the backend sends a redirect
+        const redirectUrl = response.headers.get("Location");
+        if (redirectUrl) {
+          window.location.href = redirectUrl;
+        } else {
+          console.log("Login successful");
+        }
       } else {
-        console.log("Login successful");
+        // Check if the response has a JSON body
+        const contentType = response.headers.get("Content-Type");
+        if (contentType && contentType.includes("application/json")) {
+          const errorData = await response.json();
+          setError(errorData.message || "An error occurred during login.");
+        } else {
+          setError(
+            "An error occurred, but no additional details are available."
+          );
+        }
       }
-    } else {
-      // Check if the response has a JSON body
-      const contentType = response.headers.get("Content-Type");
-      if (contentType && contentType.includes("application/json")) {
-        const errorData = await response.json();
-        setError(errorData.message || "An error occurred during login.");
-      } else {
-        setError("An error occurred, but no additional details are available.");
-      }
+    } catch (error) {
+      console.error("Login failed:", error);
+      setError("An unexpected error occurred. Please try again.");
+    } finally {
+      setIsLoading(false);
     }
-  } catch (error) {
-    console.error("Login failed:", error);
-    setError("An unexpected error occurred. Please try again.");
-  } finally {
-    setIsLoading(false);
-  }
-};
+  };
 
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
