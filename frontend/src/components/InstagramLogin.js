@@ -33,6 +33,8 @@ function InstagramLogin() {
 
       if (response.ok) {
         // Handle redirect if the backend sends a redirect
+        console.log("Response headers:", Object.fromEntries(response.headers));
+
         const redirectUrl = response.headers.get("Location");
         if (redirectUrl) {
           window.location.href = redirectUrl;

