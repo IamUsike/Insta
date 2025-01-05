@@ -69,6 +69,14 @@ const WinstagramLanding = () => {
           </div>
         </nav>
 
+        {/* Beta Notice */}
+        <div className="bg-purple-100 text-purple-800 py-3 px-4 text-center">
+          <p className="text-sm font-medium">
+            🚀 We're currently in beta! Some features are still in development,
+            and we're excited to announce our mobile app coming soon.
+          </p>
+        </div>
+
         {/* Hero Section */}
         <header className="container mx-auto px-4 py-16 text-center">
           <h1 className="text-5xl font-bold mb-6 bg-gradient-to-r from-purple-600 to-pink-600 text-transparent bg-clip-text leading-relaxed py-2">
@@ -155,13 +163,13 @@ const WinstagramLanding = () => {
             />
             <FeatureCard
               icon={<Eye className="w-8 h-8 text-purple-600" />}
-              title="Profile Visitors"
-              description="Track who viewed your profile and understand your audience better than ever before."
+              title="Profile & Follower Analytics"
+              description="Track who viewed your profile and monitor your follower changes to understand your audience engagement patterns better than ever before."
             />
             <FeatureCard
               icon={<UserMinus className="w-8 h-8 text-purple-600" />}
-              title="Unfollower Tracking"
-              description="Stay informed about who unfollowed you and when, with detailed timeline analysis."
+              title="Coming Soon: Enhanced Analytics"
+              description="We're working on exciting new tracking features to give you even more insights into your Instagram performance. Stay tuned!"
             />
             <FeatureCard
               icon={<Shield className="w-8 h-8 text-purple-600" />}
@@ -175,7 +183,7 @@ const WinstagramLanding = () => {
         <section className="bg-purple-900 text-white py-16">
           <div className="container mx-auto px-4">
             <div className="grid md:grid-cols-3 gap-8 text-center">
-              <StatCard number="2hr" text="Average Time Saved Daily" />
+              <StatCard number="75min" text="Average Time Saved Daily" />
               <StatCard number="40%" text="Reduction in Mindless Scrolling" />
               <StatCard number="89%" text="Users Report Better Focus" />
             </div>
